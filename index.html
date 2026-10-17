@@ -1,2103 +1,500 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataforma Académica</title>
-
-    <style>
-        /* =========================================================
-           1. RESET Y ESTILOS GLOBALES
-        ========================================================= */
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        [hidden] {
-            display: none !important;
-        }
-
-        /* =========================================================
-           2. LOGIN
-        ========================================================= */
-
-        body.login-body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .login-body .card {
-            background-color: #ffffff;
-            padding: 20px;
-            width: 100%;
-            max-width: 450px;
-        }
-
-        .login-body .card h2 {
-            margin-bottom: 20px;
-            color: #1f2937;
-        }
-
-        .login-body .input-group {
-            margin-bottom: 16px;
-        }
-
-        .login-body input {
-            width: 100%;
-            padding: 18px 20px;
-            background-color: #ffffff;
-            border: 1px solid #8e959e;
-            border-radius: 20px;
-            color: #333333;
-            font-size: 16px;
-            outline: none;
-        }
-
-        .login-body input:focus {
-            border-color: #0066ff;
-        }
-
-        .login-body button {
-            width: 100%;
-            padding: 16px;
-            background-color: #0066ff;
-            color: #ffffff;
-            font-weight: 600;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 18px;
-            margin-top: 10px;
-        }
-
-        .login-body button:hover {
-            background-color: #0052cc;
-        }
-
-        .error-text {
-            color: #d93025;
-            font-size: 14px;
-            margin-top: 15px;
-            text-align: center;
-        }
-
-        .btn-ver-tarea {
-            display: block;
-            width: 100%;
-            text-align: center;
-            padding: 14px;
-            margin-top: 12px;
-            background-color: transparent;
-            color: #0066ff;
-            border: 2px solid #0066ff;
-            border-radius: 30px;
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-ver-tarea:hover {
-            background-color: #0066ff;
-            color: #ffffff;
-        }
-
-        /* =========================================================
-           3. DASHBOARD
-        ========================================================= */
-
-        body.dashboard-body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0b0f19;
-            color: #e2e8f0;
-            display: flex;
-            min-height: 100vh;
-        }
-
-        #view-app {
-            display: flex;
-            width: 100%;
-            min-height: 100vh;
-        }
-
-        /* SIDEBAR */
-
-        .sidebar {
-            width: 250px;
-            background-color: #080b12;
-            border-right: 1px solid #1e293b;
-            padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            align-self: flex-start;
-            overflow-y: auto;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 35px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #1e293b;
-        }
-
-        .upla-logo {
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            color: #38bdf8;
-            border: 2px solid #38bdf8;
-            border-radius: 8px;
-            padding: 6px 8px;
-        }
-
-        .brand-text p {
-            font-size: 11px;
-            color: #64748b;
-        }
-
-        .sidebar-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex-grow: 1;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            color: #94a3b8;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            background-color: #1e293b;
-            color: #38bdf8;
-        }
-
-        .nav-item.logout {
-            margin-top: auto;
-            color: #f87171;
-        }
-
-        .nav-item.logout:hover {
-            background-color: #451a1a;
-        }
-
-        /* CONTENIDO */
-
-        .main-dashboard {
-            flex-grow: 1;
-            min-width: 0;
-            padding: 35px 45px;
-            overflow-y: auto;
-        }
-
-        .user-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-        }
-
-        .user-info h1 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
-
-        .user-subtitle {
-            font-size: 14px;
-            font-weight: 400;
-            color: #94a3b8;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn-logout-header {
-            display: inline-block;
-            text-decoration: none;
-            color: #f87171;
-            border-color: #7f1d1d;
-        }
-
-        .btn-logout-header:hover {
-            background-color: #451a1a;
-        }
-
-        .btn-secondary {
-            background-color: #1a2234;
-            border: 1px solid #334155;
-            color: #e2e8f0;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            width: auto;
-            transition: background 0.2s;
-        }
-
-        .btn-secondary:hover {
-            background-color: #2a3449;
-        }
-
-        /* PESTAÑAS */
-
-        .tabs-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .tab-btn {
-            display: inline-block;
-            background-color: #131b2e;
-            border: 1px solid #1e293b;
-            color: #94a3b8;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .tab-btn.active,
-        .tab-btn:hover {
-            background-color: #0284c7;
-            color: #ffffff;
-            border-color: #0284c7;
-        }
-
-        /* BANNER */
-
-        .welcome-banner {
-            margin-bottom: 35px;
-        }
-
-        .welcome-banner h2 {
-            font-size: 28px;
-            color: #ffffff;
-            margin-bottom: 6px;
-        }
-
-        .welcome-banner p {
-            color: #94a3b8;
-            font-size: 15px;
-        }
-
-        /* =========================================================
-           4. UNIDADES Y SEMANAS
-        ========================================================= */
-
-        .units-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-top: 25px;
-        }
-
-        .unit-card {
-            background-color: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .unit-card .unit-header {
-            background-color: #1e293b;
-            padding: 16px 20px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #38bdf8;
-            border-bottom: 1px solid #334155;
-        }
-
-        .weeks-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            padding: 20px;
-        }
-
-        .week-card {
-            background-color: #0b0f19;
-            border: 1px solid #1e293b;
-            border-radius: 8px;
-            padding: 16px;
-            text-align: center;
-            text-decoration: none;
-            color: #e2e8f0;
-            transition: all 0.2s ease;
-        }
-
-        .week-card:hover {
-            border-color: #38bdf8;
-            background-color: rgba(56, 189, 248, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .week-number {
-            font-size: 20px;
-            font-weight: bold;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
-
-        .week-label {
-            font-size: 12px;
-            color: #94a3b8;
-        }
-
-        /* =========================================================
-           5. ACTIVIDAD
-        ========================================================= */
-
-        .container-actividad {
-            max-width: 800px;
-            margin: 10px auto;
-            background-color: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-            padding: 30px;
-            color: #e2e8f0;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-        }
-
-        .container-actividad .form-group {
-            margin-bottom: 20px;
-        }
-
-        .container-actividad .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #38bdf8;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            background-color: #0b0f19;
-            border: 1px solid #1e293b;
-            border-radius: 8px;
-            color: #fff;
-            font-family: inherit;
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 110px;
-        }
-
-        .btn-subir {
-            background-color: #38bdf8;
-            color: #0f172a;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .btn-subir:hover {
-            background-color: #0284c7;
-            color: #ffffff;
-        }
-
-        .tarea-vista {
-            background-color: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 15px;
-        }
-
-        .btn-descargar {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 12px 20px;
-            background-color: #38bdf8;
-            color: #0f172a;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: all 0.2s ease;
-        }
-
-        .btn-descargar:hover {
-            background-color: #0284c7;
-            color: #ffffff;
-        }
-
-        .btn-back {
-            display: inline-block;
-            color: #38bdf8;
-            text-decoration: none;
-            font-size: 14px;
-            margin-bottom: 18px;
-        }
-
-        .btn-back:hover {
-            text-decoration: underline;
-        }
-
-        /* =========================================================
-           6. MODAL
-        ========================================================= */
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-overlay.open {
-            display: flex;
-        }
-
-        .modal-box {
-            background-color: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 25px;
-            width: 380px;
-            max-width: 90%;
-            color: #fff;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-box h3 {
-            color: #38bdf8;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 10px;
-        }
-
-        .modal-body {
-            margin: 15px 0;
-            font-size: 14px;
-            line-height: 1.8;
-            color: #e2e8f0;
-        }
-
-        .modal-box .btn-secondary {
-            width: 100%;
-            margin-top: 10px;
-            background-color: #38bdf8;
-            color: #0f172a;
-            font-weight: bold;
-        }
-
-        /* =========================================================
-           7. RESPONSIVE
-        ========================================================= */
-
-        @media (max-width: 800px) {
-
-            body.dashboard-body,
-            #view-app {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: static;
-                border-right: none;
-                border-bottom: 1px solid #1e293b;
-            }
-
-            .main-dashboard {
-                padding: 20px;
-            }
-
-            .weeks-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plataforma Académica · Hip Hop Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rubik+Mono+One&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--panel:#141414;--panel2:#1c1c1c;--line:#2e2e2e;--gold:#facc15;--pink:#ff2d95;--purple:#8b5cf6;--cyan:#22d3ee;--text:#f5f5f5;--muted:#a1a1aa}
+*{box-sizing:border-box;margin:0;padding:0}[hidden]{display:none!important}
+body{font-family:'Oswald','Segoe UI',Tahoma,sans-serif;letter-spacing:.3px}
+
+/* ---------- LOGIN ---------- */
+body.login-body{background:
+  radial-gradient(circle at 20% 20%,rgba(255,45,149,.25),transparent 45%),
+  radial-gradient(circle at 80% 80%,rgba(139,92,246,.28),transparent 45%),
+  repeating-linear-gradient(0deg,#121212 0 38px,#0c0c0c 38px 40px),#0a0a0a;
+  display:flex;justify-content:center;align-items:center;min-height:100vh;color:var(--text)}
+.login-body .card{background:rgba(10,10,10,.92);padding:32px 28px;width:100%;max-width:450px;border:3px solid var(--gold);border-radius:18px;box-shadow:8px 8px 0 var(--pink),0 0 40px rgba(250,204,21,.15);transform:rotate(-1deg)}
+.login-body .card h2{margin-bottom:6px;font-family:'Permanent Marker',cursive;font-size:34px;color:var(--gold);text-shadow:3px 3px 0 var(--pink)}
+.login-sub{color:var(--muted);margin-bottom:22px;font-size:14px;text-transform:uppercase;letter-spacing:2px}
+.login-body .input-group{margin-bottom:16px}
+.login-body input{width:100%;padding:16px 20px;background:#000;border:2px solid #3f3f46;border-radius:12px;color:#fff;font-size:16px;font-family:inherit;outline:none}
+.login-body input:focus{border-color:var(--cyan);box-shadow:0 0 12px rgba(34,211,238,.5)}
+.login-body button{width:100%;padding:16px;background:var(--gold);color:#000;font-family:'Rubik Mono One',sans-serif;border:3px solid #000;border-radius:12px;cursor:pointer;font-size:16px;margin-top:10px;box-shadow:4px 4px 0 var(--pink);transition:all .15s}
+.login-body button:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--pink)}
+.error-text{color:var(--pink);font-size:15px;margin-top:15px;text-align:center;font-weight:600}
+.btn-ver-tarea{display:block;width:100%;text-align:center;padding:13px;margin-top:14px;background:transparent;color:var(--cyan);border:2px dashed var(--cyan);border-radius:12px;font-weight:700;text-decoration:none;font-size:15px;text-transform:uppercase;letter-spacing:2px;transition:all .25s}
+.btn-ver-tarea:hover{background:var(--cyan);color:#000;border-style:solid}
+
+/* ---------- DASHBOARD ---------- */
+body.dashboard-body{background:
+  radial-gradient(circle at 90% 0%,rgba(139,92,246,.18),transparent 40%),
+  radial-gradient(circle at 0% 100%,rgba(255,45,149,.15),transparent 40%),var(--bg);
+  color:var(--text);display:flex;min-height:100vh}
+#view-app{display:flex;width:100%;min-height:100vh}
+.sidebar{width:250px;background:#000;border-right:3px solid var(--gold);padding:24px 16px;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;align-self:flex-start;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:35px;padding-bottom:15px;border-bottom:2px dashed var(--line)}
+.upla-logo{font-family:'Rubik Mono One',sans-serif;font-size:16px;color:#000;background:var(--gold);border:3px solid #000;border-radius:8px;padding:8px 8px;box-shadow:3px 3px 0 var(--pink);transform:rotate(-4deg)}
+.brand-text p{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px}
+.sidebar-nav{display:flex;flex-direction:column;gap:8px;flex-grow:1}
+.nav-item{display:flex;align-items:center;gap:10px;padding:12px 16px;color:var(--muted);text-decoration:none;border-radius:8px;font-size:15px;font-weight:600;text-transform:uppercase;letter-spacing:1px;border-left:4px solid transparent;transition:all .2s}
+.nav-item::before{content:'🎧'}
+.nav-item.logout::before{content:'🚪'}
+.nav-item:hover,.nav-item.active{background:var(--panel2);color:var(--gold);border-left-color:var(--pink)}
+.nav-item.logout{margin-top:auto;color:var(--pink)}
+.nav-item.logout:hover{background:#2a0a1a}
+.main-dashboard{flex-grow:1;min-width:0;padding:35px 45px;overflow-y:auto}
+.user-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:25px}
+.user-info h1{font-family:'Permanent Marker',cursive;font-size:28px;font-weight:400;color:var(--gold);text-shadow:2px 2px 0 var(--pink);margin-bottom:4px}
+.user-subtitle{font-family:'Oswald',sans-serif;font-size:14px;font-weight:400;color:var(--muted);text-shadow:none}
+.header-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-logout-header{display:inline-block;text-decoration:none;color:var(--pink);border-color:var(--pink)}
+.btn-logout-header:hover{background:#2a0a1a}
+.btn-secondary{background:var(--panel2);border:2px solid var(--purple);color:var(--text);padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;text-transform:uppercase;letter-spacing:1px;width:auto;transition:all .2s}
+.btn-secondary:hover{background:var(--purple);box-shadow:3px 3px 0 var(--gold)}
+.btn-gh{border-color:var(--cyan);color:var(--cyan)}
+.btn-gh:hover{background:var(--cyan);color:#000;box-shadow:3px 3px 0 var(--pink)}
+.tabs-container{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
+.tab-btn{display:inline-block;background:var(--panel);border:2px solid var(--line);color:var(--muted);padding:10px 20px;border-radius:6px;cursor:pointer;font-size:14px;font-weight:600;text-decoration:none;text-transform:uppercase;letter-spacing:1px;transition:all .2s}
+.tab-btn.active,.tab-btn:hover{background:var(--pink);color:#fff;border-color:var(--pink);box-shadow:3px 3px 0 var(--gold)}
+.welcome-banner{margin-bottom:35px}
+.welcome-banner h2{font-family:'Permanent Marker',cursive;font-size:34px;font-weight:400;color:var(--gold);text-shadow:3px 3px 0 var(--pink);margin-bottom:6px}
+.welcome-banner p{color:var(--muted);font-size:16px}
+.units-container{display:flex;flex-direction:column;gap:22px;margin-top:25px}
+.unit-card{background:var(--panel);border:2px solid var(--line);border-radius:12px;overflow:hidden}
+.unit-card .unit-header{background:linear-gradient(90deg,var(--purple),var(--pink));padding:14px 20px;font-family:'Rubik Mono One',sans-serif;font-size:15px;color:#fff;border-bottom:3px solid var(--gold)}
+.weeks-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:20px}
+.week-card{background:#050505;border:2px solid var(--line);border-radius:10px;padding:14px;text-align:center;color:var(--text);display:flex;flex-direction:column;gap:12px;transition:all .2s}
+.week-card:hover{border-color:var(--gold);box-shadow:5px 5px 0 var(--pink);transform:translateY(-3px)}
+.week-main{display:block;text-decoration:none;color:inherit}
+.week-number{font-family:'Permanent Marker',cursive;font-size:22px;color:var(--gold);margin-bottom:4px}
+.week-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.week-actions{display:flex;flex-direction:column;gap:8px}
+.btn-week{display:block;width:100%;padding:9px 8px;border-radius:8px;border:2px solid #000;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;text-align:center;text-decoration:none;cursor:pointer;transition:all .15s}
+.btn-view{background:var(--cyan);color:#000;box-shadow:3px 3px 0 var(--purple)}
+.btn-dl{background:var(--gold);color:#000;box-shadow:3px 3px 0 var(--pink)}
+.btn-week:hover{transform:translate(2px,2px);box-shadow:1px 1px 0 #000;filter:brightness(1.1)}
+
+/* ---------- ACTIVIDAD ---------- */
+.container-actividad{max-width:800px;margin:10px auto;background:var(--panel);border:3px solid var(--gold);border-radius:14px;padding:30px;color:var(--text);box-shadow:8px 8px 0 var(--pink)}
+.container-actividad .form-group{margin-bottom:20px}
+.container-actividad .form-group label{display:block;margin-bottom:8px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:1px}
+.form-control{width:100%;padding:12px;background:#000;border:2px solid #3f3f46;border-radius:8px;color:#fff;font-family:inherit}
+.form-control:focus{outline:none;border-color:var(--cyan)}
+textarea.form-control{resize:vertical;min-height:110px}
+.btn-subir{background:var(--gold);color:#000;border:3px solid #000;padding:12px 24px;border-radius:8px;font-family:'Rubik Mono One',sans-serif;font-size:13px;cursor:pointer;box-shadow:4px 4px 0 var(--pink);transition:all .15s}
+.btn-subir:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--pink)}
+.btn-subir:disabled{opacity:.6;cursor:wait}
+.subida-estado{margin-top:14px;font-size:15px;color:var(--cyan);min-height:20px}
+.subida-estado.err{color:var(--pink);font-weight:600}
+.tarea-vista{background:var(--panel2);border:2px dashed var(--purple);border-radius:8px;padding:20px;margin-top:15px}
+.tarea-botones{display:flex;gap:12px;flex-wrap:wrap}
+.btn-descargar{display:inline-block;margin-top:15px;padding:12px 20px;background:var(--gold);color:#000;text-decoration:none;border:3px solid #000;border-radius:8px;font-weight:700;text-transform:uppercase;box-shadow:3px 3px 0 var(--pink);transition:all .15s;cursor:pointer}
+.btn-descargar:hover{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--pink)}
+.btn-descargar.btn-ver{background:var(--cyan);box-shadow:3px 3px 0 var(--purple)}
+.btn-back{display:inline-block;color:var(--cyan);text-decoration:none;font-size:15px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:18px}
+.btn-back:hover{color:var(--gold)}
+
+/* ---------- MODAL ---------- */
+.modal-overlay{display:none;position:fixed;inset:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;justify-content:center;align-items:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--panel);border:3px solid var(--gold);border-radius:14px;padding:25px;width:380px;max-width:90%;max-height:92vh;overflow-y:auto;color:#fff;box-shadow:8px 8px 0 var(--pink)}
+.modal-box h3{font-family:'Permanent Marker',cursive;font-weight:400;font-size:24px;color:var(--gold);border-bottom:2px dashed var(--line);padding-bottom:10px}
+.foto-estudiante{width:110px;height:110px;object-fit:cover;border-radius:50%;display:block;margin:15px auto 18px;border:4px solid var(--pink);box-shadow:0 0 0 3px var(--gold),0 0 22px rgba(255,45,149,.45)}
+.modal-body{margin:15px 0;font-size:15px;line-height:1.8;color:var(--text)}
+.modal-body strong{color:var(--cyan)}
+.modal-box .btn-secondary{width:100%;margin-top:10px;background:var(--gold);color:#000;border-color:#000;font-weight:700}
+.modal-box .btn-secondary.alt{background:transparent;color:var(--pink);border-color:var(--pink)}
+.gh-modal{width:460px}
+.gh-modal label{display:block;margin:14px 0 6px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;font-size:12px}
+.gh-hint{font-size:13px;color:var(--muted);line-height:1.6;margin-top:12px}
+.gh-estado{margin-top:12px;font-size:14px;min-height:18px;color:var(--cyan)}
+.gh-estado.err{color:var(--pink);font-weight:600}
+
+@media(max-width:800px){body.dashboard-body,#view-app{flex-direction:column}.sidebar{width:100%;height:auto;position:static;border-right:none;border-bottom:3px solid var(--gold)}.main-dashboard{padding:20px}.weeks-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
 </head>
-
 <body class="login-body">
-
-    <!-- =========================================================
-         LOGIN
-    ========================================================== -->
-
-    <div class="card" id="view-login">
-
-        <h2>Iniciar Sesión</h2>
-
-        <form id="loginForm">
-
-            <div class="input-group">
-                <input
-                    type="text"
-                    id="username"
-                    placeholder="Usuario o Correo"
-                    required>
-            </div>
-
-            <div class="input-group">
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Contraseña"
-                    required>
-            </div>
-
-            <button type="submit">
-                Ingresar
-            </button>
-
-            <p id="error-message" class="error-text" hidden></p>
-
-        </form>
-
-        <a
-            href="#curso?nombre=Desarrollo%20de%20Aplicaciones&modo=tarea"
-            class="btn-ver-tarea">
-
-            Ver Tarea
-
-        </a>
-
-    </div>
-
-
-    <!-- =========================================================
-         APLICACIÓN
-    ========================================================== -->
-
-    <div id="view-app" hidden>
-
-        <!-- SIDEBAR -->
-
-        <aside class="sidebar">
-
-            <div class="brand">
-
-                <div class="brand-logo-container">
-
-                    <div class="upla-logo">
-                        UPLA
-                    </div>
-
-                </div>
-
-                <div class="brand-text">
-
-                    <p>Universidad</p>
-                    <p>Peruana</p>
-                    <p>Los Andes</p>
-
-                </div>
-
-            </div>
-
-            <nav
-                class="sidebar-nav"
-                id="sidebar-nav">
-            </nav>
-
-        </aside>
-
-
-        <!-- CONTENIDO PRINCIPAL -->
-
-        <main
-            class="main-dashboard"
-            id="main-dashboard">
-
-
-            <!-- CABECERA -->
-
-            <header class="user-header">
-
-                <div class="user-info">
-
-                    <h1>
-
-                        Gonzales Soto Jhoel
-
-                        <span class="user-subtitle">
-
-                            · Ingeniería de sistemas y computación · Ciclo IV
-
-                        </span>
-
-                    </h1>
-
-                </div>
-
-
-                <div class="header-actions">
-
-                    <button
-                        class="btn-secondary"
-                        id="btn-info"
-                        type="button">
-
-                        Información
-
-                    </button>
-
-
-                    <button
-                        class="btn-secondary"
-                        type="button">
-
-                        Editar perfil
-
-                    </button>
-
-
-                    <a
-                        href="#login"
-                        class="btn-secondary btn-logout-header"
-                        id="btn-logout-header">
-
-                        Cerrar sesión
-
-                    </a>
-
-                </div>
-
-            </header>
-
-
-            <!-- PESTAÑAS -->
-
-            <div
-                class="tabs-container"
-                id="tabs-container">
-            </div>
-
-
-            <!-- =====================================================
-                 INICIO
-            ====================================================== -->
-
-            <section
-                id="page-inicio"
-                hidden>
-
-                <div class="welcome-banner">
-
-                    <h2>
-                        Jhoel
-                    </h2>
-
-                    <p>
-                        Aquí reúnes las actividades de tus dos cursos,
-                        organizadas por unidad.
-                    </p>
-
-                </div>
-
-            </section>
-
-
-            <!-- =====================================================
-                 CURSO
-            ====================================================== -->
-
-            <section
-                id="page-curso"
-                hidden>
-
-                <div class="welcome-banner">
-
-                    <h2 id="course-title">
-                    </h2>
-
-                    <p>
-                        Estructura de contenidos organizada en
-                        4 unidades y 16 semanas lectivas.
-                    </p>
-
-                </div>
-
-                <div
-                    class="units-container"
-                    id="units-container">
-                </div>
-
-            </section>
-
-
-            <!-- =====================================================
-                 ACTIVIDAD
-            ====================================================== -->
-
-            <section
-                id="page-actividad"
-                hidden>
-
-                <a
-                    href="#"
-                    class="btn-back"
-                    id="btn-volver-curso">
-
-                    ← Volver al curso
-
-                </a>
-
-
-                <div class="container-actividad">
-
-                    <h2
-                        id="titulo-pagina"
-                        style="
-                            color:#ffffff;
-                            margin-top:0;
-                            border-bottom:1px solid #1e293b;
-                            padding-bottom:15px;
-                            margin-bottom:20px;
-                        ">
-
-                        Entrega de Actividad
-
-                    </h2>
-
-
-                    <!-- SUBIR TAREA -->
-
-                    <section id="seccion-subida">
-
-                        <form id="formSubirTarea">
-
-                            <div class="form-group">
-
-                                <label for="comentarioInput">
-
-                                    Comentario / Mensaje:
-
-                                </label>
-
-                                <textarea
-                                    id="comentarioInput"
-                                    class="form-control"
-                                    placeholder="Escribe un mensaje o descripción para el profesor sobre tu trabajo...">
-                                </textarea>
-
-                            </div>
-
-
-                            <div class="form-group">
-
-                                <label for="fileInput">
-
-                                    Adjuntar Archivo:
-
-                                </label>
-
-                                <input
-                                    type="file"
-                                    id="fileInput"
-                                    class="form-control"
-                                    required>
-
-                            </div>
-
-
-                            <button
-                                type="submit"
-                                class="btn-subir">
-
-                                Subir Tarea
-
-                            </button>
-
-                        </form>
-
-                    </section>
-
-
-                    <!-- VER TAREA -->
-
-                    <section
-                        id="seccion-vista-tarea"
-                        hidden>
-
-                        <h3
-                            style="
-                                color:#38bdf8;
-                                margin-top:0;
-                            ">
-
-                            Detalles de la Tarea Entregada
-
-                        </h3>
-
-
-                        <div class="tarea-vista">
-
-                            <p>
-                                <strong>
-                                    Comentario del Estudiante:
-                                </strong>
-                            </p>
-
-
-                            <p
-                                id="comentarioMostrar"
-                                style="
-                                    color:#94a3b8;
-                                    font-style:italic;
-                                    background:#0b0f19;
-                                    padding:12px;
-                                    border-radius:6px;
-                                    margin-top:8px;
-                                ">
-
-                                Cargando comentario...
-
-                            </p>
-
-
-                            <div
-                                style="margin-top:20px;">
-
-                                <p>
-
-                                    <strong>
-                                        Archivo adjunto para descargar:
-                                    </strong>
-
-                                </p>
-
-
-                                <a
-                                    id="btnDescargarArchivo"
-                                    href="#"
-                                    class="btn-descargar"
-                                    download>
-
-                                    Descargar Archivo
-
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </section>
-
-                </div>
-
-            </section>
-
-        </main>
-
-
-        <!-- =====================================================
-             MODAL INFORMACIÓN
-        ====================================================== -->
-
-        <div
-            id="modal-info"
-            class="modal-overlay">
-
-            <div class="modal-box">
-
-                <h3>
-                    Información del Estudiante
-                </h3>
-
-
-                <div class="modal-body">
-
-                    <p>
-                        <strong>
-                            Estudiante:
-                        </strong>
-                        Gonzales Soto Jhoel
-                    </p>
-
-                    <p>
-                        <strong>
-                            Carrera:
-                        </strong>
-                        Ingeniería de Sistemas y Computación
-                    </p>
-
-                    <p>
-                        <strong>
-                            Ciclo:
-                        </strong>
-                        IV
-                    </p>
-
-                    <p>
-                        <strong>
-                            Universidad:
-                        </strong>
-                        Universidad Peruana Los Andes
-                    </p>
-
-                    <p>
-                        <strong>
-                            Estado:
-                        </strong>
-                        Matriculado / Activo
-                    </p>
-
-                </div>
-
-
-                <button
-                    id="btn-cerrar-info"
-                    class="btn-secondary"
-                    type="button">
-
-                    Cerrar
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================================================
-         JAVASCRIPT
-    ========================================================== -->
-
-    <script>
-
-        (function () {
-
-            'use strict';
-
-
-            /* =====================================================
-               CONFIGURACIÓN
-            ====================================================== */
-
-            const API_URL =
-                'http://localhost:3000/api';
-
-            const USUARIO_VALIDO =
-                'u00054e';
-
-            const CLAVE_VALIDA =
-                'combate159';
-
-            const CURSOS = [
-                'Desarrollo de Aplicaciones',
-                'Algoritmos y Estructuras de Datos'
-            ];
-
-            const CURSO_POR_DEFECTO =
-                CURSOS[0];
-
-            const UNIDADES = [
-                'I',
-                'II',
-                'III',
-                'IV'
-            ];
-
-            const SEMANAS_POR_UNIDAD = 4;
-
-
-            /* =====================================================
-               URL DE FIGMA PARA SEMANA 01
-            ====================================================== */
-
-            const FIGMA_SEMANA_01 =
-                'https://www.figma.com/design/Mz7Vu87mZjwNbmtDRg3ZTX/Sin-t%C3%ADtulo?node-id=0-1&t=gpqgJMux6lx2Ncbg-1';
-
-
-            /* =====================================================
-               UTILIDADES
-            ====================================================== */
-
-            const $ =
-                (id) => document.getElementById(id);
-
-
-            function esc(texto) {
-
-                const div =
-                    document.createElement('div');
-
-                div.textContent =
-                    texto;
-
-                return div.innerHTML;
-
-            }
-
-
-            function enlace(vista, params) {
-
-                const query =
-                    Object.entries(params || {})
-
-                        .filter(
-                            ([, v]) =>
-                                v !== null &&
-                                v !== undefined
-                        )
-
-                        .map(
-                            ([k, v]) =>
-                                k +
-                                '=' +
-                                encodeURIComponent(v)
-                        )
-
-                        .join('&');
-
-
-                return '#' +
-                    vista +
-                    (query ? '?' + query : '');
-
-            }
-
-
-            function leerHash() {
-
-                const raw =
-                    location.hash.replace(/^#/, '') ||
-                    'login';
-
-                const partes =
-                    raw.split('?');
-
-
-                return {
-
-                    vista: partes[0],
-
-                    params:
-                        new URLSearchParams(
-                            partes[1] || ''
-                        )
-
-                };
-
-            }
-
-
-            /* =====================================================
-               SESIÓN
-            ====================================================== */
-
-            let sesionEnMemoria =
-                false;
-
-
-            function estaLogueado() {
-
-                if (sesionEnMemoria)
-                    return true;
-
-
-                try {
-
-                    return (
-                        sessionStorage.getItem('sesion') === '1'
-                    );
-
-                } catch (e) {
-
-                    return false;
-
-                }
-
-            }
-
-
-            function guardarSesion(activa) {
-
-                sesionEnMemoria =
-                    activa;
-
-
-                try {
-
-                    if (activa) {
-
-                        sessionStorage.setItem(
-                            'sesion',
-                            '1'
-                        );
-
-                    } else {
-
-                        sessionStorage.removeItem(
-                            'sesion'
-                        );
-
-                    }
-
-                } catch (e) {
-
-                    /* almacenamiento no disponible */
-
-                }
-
-            }
-
-
-            /* =====================================================
-               SIDEBAR
-            ====================================================== */
-
-            function renderSidebar(
-                vista,
-                curso,
-                modoTarea
-            ) {
-
-                let html = '';
-
-
-                if (!modoTarea) {
-
-                    html +=
-                        '<a href="#inicio" class="nav-item' +
-                        (
-                            vista === 'inicio'
-                                ? ' active'
-                                : ''
-                        ) +
-                        '">' +
-                        'Inicio' +
-                        '</a>';
-
-                }
-
-
-                html +=
-                    '<a href="' +
-                    enlace(
-                        'curso',
-                        {
-                            nombre: curso,
-                            modo:
-                                modoTarea
-                                    ? 'tarea'
-                                    : null
-                        }
-                    ) +
-                    '"' +
-                    ' class="nav-item' +
-                    (
-                        vista !== 'inicio'
-                            ? ' active'
-                            : ''
-                    ) +
-                    '">' +
-                    esc(curso) +
-                    '</a>';
-
-
-                html +=
-                    '<a href="#login" ' +
-                    'class="nav-item logout" ' +
-                    'id="btn-logout">' +
-                    'Cerrar Sesión' +
-                    '</a>';
-
-
-                $('sidebar-nav').innerHTML =
-                    html;
-
-            }
-
-
-            /* =====================================================
-               TABS
-            ====================================================== */
-
-            function renderTabs(
-                vista,
-                curso,
-                modoTarea
-            ) {
-
-                let html = '';
-
-
-                if (!modoTarea) {
-
-                    html +=
-                        '<a href="#inicio" ' +
-                        'class="tab-btn' +
-                        (
-                            vista === 'inicio'
-                                ? ' active'
-                                : ''
-                        ) +
-                        '">' +
-                        'Inicio' +
-                        '</a>';
-
-                }
-
-
-                CURSOS.forEach(
-                    function (nombre) {
-
-                        const activo =
-                            vista === 'curso' &&
-                            nombre === curso;
-
-
-                        html +=
-                            '<a href="' +
-                            enlace(
-                                'curso',
-                                {
-                                    nombre: nombre,
-                                    modo:
-                                        modoTarea
-                                            ? 'tarea'
-                                            : null
-                                }
-                            ) +
-                            '"' +
-                            ' class="tab-btn' +
-                            (
-                                activo
-                                    ? ' active'
-                                    : ''
-                            ) +
-                            '">' +
-                            esc(nombre) +
-                            '</a>';
-
-                    }
-                );
-
-
-                $('tabs-container').innerHTML =
-                    html;
-
-            }
-
-
-            /* =====================================================
-               UNIDADES Y SEMANAS
-            ====================================================== */
-
-            function renderUnidades(
-                curso,
-                modoTarea
-            ) {
-
-                let html = '';
-
-
-                for (
-                    let u = 0;
-                    u < UNIDADES.length;
-                    u++
-                ) {
-
-                    html +=
-                        '<div class="unit-card">' +
-
-                        '<div class="unit-header">' +
-                        'Unidad ' +
-                        UNIDADES[u] +
-                        '</div>' +
-
-                        '<div class="weeks-grid">';
-
-
-                    for (
-                        let i = 1;
-                        i <= SEMANAS_POR_UNIDAD;
-                        i++
-                    ) {
-
-                        const semana =
-                            u *
-                            SEMANAS_POR_UNIDAD +
-                            i;
-
-
-                        /*
-                         * ==================================================
-                         * SEMANA 01 DE DESARROLLO DE APLICACIONES
-                         * ABRE EL DISEÑO DE FIGMA EN OTRA PESTAÑA
-                         * ==================================================
-                         */
-
-                        let href;
-
-                        let target = '';
-
-
-                        if (
-                            curso === 'Desarrollo de Aplicaciones' &&
-                            semana === 1
-                        ) {
-
-                            href =
-                                FIGMA_SEMANA_01;
-
-                            target =
-                                ' target="_blank" rel="noopener noreferrer" ';
-
-                        } else if (
-                            curso === 'Algoritmos y Estructuras de Datos' &&
-                            semana === 1
-                        ) {
-
-                            href =
-                                'tareas/algoritmos/tarea1.pdf';
-
-                            target =
-                                ' target="_blank" rel="noopener noreferrer" download ';
-
-                        } else if (
-                            curso === 'Algoritmos y Estructuras de Datos' &&
-                            semana === 2
-                        ) {
-
-                            href =
-                                'tareas/algoritmos/tarea2.pdf';
-
-                            target =
-                                ' target="_blank" rel="noopener noreferrer" download ';
-
-                        } else {
-
-                            href =
-                                enlace(
-                                    'actividad',
-                                    {
-                                        nombre: curso,
-                                        semana: semana,
-                                        modo:
-                                            modoTarea
-                                                ? 'tarea'
-                                                : null
-                                    }
-                                );
-
-                        }
-
-
-                        html +=
-                            '<a href="' +
-                            href +
-                            '"' +
-                            target +
-                            'class="week-card">' +
-
-                            '<div class="week-number">' +
-                            'Semana ' +
-                            semana +
-                            '</div>' +
-
-                            '<div class="week-label">' +
-                            (
-                                curso === 'Desarrollo de Aplicaciones' &&
-                                semana === 1
-                                    ? 'Ver diseño en Figma'
-                                    : (
-                                        curso === 'Algoritmos y Estructuras de Datos' &&
-                                        (semana === 1 || semana === 2)
-                                            ? 'Descargar Tarea ' + semana + ' PDF'
-                                            : 'Entrega de Actividad'
-                                    )
-                            ) +
-                            '</div>' +
-
-                            '</a>';
-
-                    }
-
-
-                    html +=
-                        '</div>' +
-                        '</div>';
-
-                }
-
-
-                $('units-container').innerHTML =
-                    html;
-
-            }
-
-
-            /* =====================================================
-               CARGAR TAREA
-            ====================================================== */
-
-            async function cargarTareaGuardada(
-                curso,
-                semana
-            ) {
-
-                const comentario =
-                    $('comentarioMostrar');
-
-                const btnDescargar =
-                    $('btnDescargarArchivo');
-
-
-                comentario.textContent =
-                    'Cargando comentario...';
-
-
-                btnDescargar.style.display =
-                    '';
-
-                btnDescargar.href =
-                    '#';
-
-                btnDescargar.textContent =
-                    'Descargar Archivo';
-
-
-                try {
-
-                    const url =
-                        API_URL +
-                        '/entregas?curso=' +
-                        encodeURIComponent(curso) +
-                        '&semana=' +
-                        semana;
-
-
-                    const res =
-                        await fetch(url);
-
-
-                    const data =
-                        await res.json();
-
-
-                    if (
-                        data &&
-                        data.length > 0
-                    ) {
-
-                        const ultima =
-                            data[0];
-
-
-                        comentario.textContent =
-                            ultima.comentario ||
-                            'Sin comentarios registrados.';
-
-
-                        btnDescargar.href =
-                            API_URL +
-                            '/descargar/' +
-                            ultima.id;
-
-
-                        btnDescargar.textContent =
-                            'Descargar Archivo (' +
-                            ultima.nombre_archivo +
-                            ')';
-
-                    } else {
-
-                        comentario.textContent =
-                            'No hay entregas disponibles para esta semana.';
-
-
-                        btnDescargar.style.display =
-                            'none';
-
-                    }
-
-                } catch (err) {
-
-                    console.error(
-                        'Error al cargar la tarea:',
-                        err
-                    );
-
-
-                    comentario.textContent =
-                        'No se pudo conectar con el servidor para obtener los datos de la tarea.';
-
-
-                    btnDescargar.style.display =
-                        'none';
-
-                }
-
-            }
-
-
-            /* =====================================================
-               ROUTER
-            ====================================================== */
-
-            function render() {
-
-                const {
-                    vista,
-                    params
-                } = leerHash();
-
-
-                const modoTarea =
-                    params.get('modo') === 'tarea';
-
-
-                const curso =
-                    params.get('nombre') ||
-                    CURSO_POR_DEFECTO;
-
-
-                const vistasValidas = [
-                    'login',
-                    'inicio',
-                    'curso',
-                    'actividad'
-                ];
-
-
-                if (
-                    vistasValidas.indexOf(vista) === -1
-                ) {
-
-                    location.hash =
-                        '#login';
-
-                    return;
-
-                }
-
-
-                /*
-                 * Protección de rutas
-                 */
-
-                const requiereSesion =
-                    vista === 'inicio' ||
-                    (
-                        vista !== 'login' &&
-                        !modoTarea
-                    );
-
-
-                if (
-                    requiereSesion &&
-                    !estaLogueado()
-                ) {
-
-                    location.hash =
-                        '#login';
-
-                    return;
-
-                }
-
-
-                /* LOGIN */
-
-                if (
-                    vista === 'login'
-                ) {
-
-                    document.body.className =
-                        'login-body';
-
-
-                    $('view-login').hidden =
-                        false;
-
-
-                    $('view-app').hidden =
-                        true;
-
-
-                    return;
-
-                }
-
-
-                /* APLICACIÓN */
-
-                document.body.className =
-                    'dashboard-body';
-
-
-                $('view-login').hidden =
-                    true;
-
-
-                $('view-app').hidden =
-                    false;
-
-
-                $('main-dashboard').scrollTop =
-                    0;
-
-
-                renderSidebar(
-                    vista,
-                    curso,
-                    modoTarea
-                );
-
-
-                $('page-inicio').hidden =
-                    vista !== 'inicio';
-
-
-                $('page-curso').hidden =
-                    vista !== 'curso';
-
-
-                $('page-actividad').hidden =
-                    vista !== 'actividad';
-
-
-                $('tabs-container').hidden =
-                    vista === 'actividad';
-
-
-                if (
-                    vista !== 'actividad'
-                ) {
-
-                    renderTabs(
-                        vista,
-                        curso,
-                        modoTarea
-                    );
-
-                }
-
-
-                /* CURSO */
-
-                if (
-                    vista === 'curso'
-                ) {
-
-                    $('course-title').textContent =
-                        curso;
-
-
-                    renderUnidades(
-                        curso,
-                        modoTarea
-                    );
-
-                }
-
-
-                /* ACTIVIDAD */
-
-                if (
-                    vista === 'actividad'
-                ) {
-
-                    const semana =
-                        Math.min(
-                            16,
-                            Math.max(
-                                1,
-                                parseInt(
-                                    params.get('semana'),
-                                    10
-                                ) || 1
-                            )
-                        );
-
-
-                    $('titulo-pagina').textContent =
-                        'Entrega de Actividad - Semana ' +
-                        semana;
-
-
-                    $('btn-volver-curso').href =
-                        enlace(
-                            'curso',
-                            {
-                                nombre: curso,
-                                modo:
-                                    modoTarea
-                                        ? 'tarea'
-                                        : null
-                            }
-                        );
-
-
-                    if (modoTarea) {
-
-                        $('seccion-subida').hidden =
-                            true;
-
-
-                        $('seccion-vista-tarea').hidden =
-                            false;
-
-
-                        cargarTareaGuardada(
-                            curso,
-                            semana
-                        );
-
-                    } else {
-
-                        $('seccion-vista-tarea').hidden =
-                            true;
-
-
-                        $('seccion-subida').hidden =
-                            false;
-
-
-                        $('formSubirTarea').reset();
-
-                    }
-
-                }
-
-            }
-
-
-            /* =====================================================
-               LOGIN
-            ====================================================== */
-
-            $('loginForm').addEventListener(
-                'submit',
-                function (e) {
-
-                    e.preventDefault();
-
-
-                    const usuario =
-                        $('username')
-                            .value
-                            .trim();
-
-
-                    const clave =
-                        $('password').value;
-
-
-                    const error =
-                        $('error-message');
-
-
-                    if (
-                        usuario === USUARIO_VALIDO &&
-                        clave === CLAVE_VALIDA
-                    ) {
-
-                        error.hidden =
-                            true;
-
-
-                        $('password').value =
-                            '';
-
-
-                        guardarSesion(
-                            true
-                        );
-
-
-                        location.hash =
-                            '#inicio';
-
-                    } else {
-
-                        error.textContent =
-                            'Código o contraseña incorrectos.';
-
-
-                        error.hidden =
-                            false;
-
-                    }
-
-                }
-            );
-
-
-            /* =====================================================
-               CERRAR SESIÓN
-            ====================================================== */
-
-            document.addEventListener(
-                'click',
-                function (e) {
-
-                    if (
-                        e.target.closest(
-                            '#btn-logout, #btn-logout-header'
-                        )
-                    ) {
-
-                        guardarSesion(
-                            false
-                        );
-
-                    }
-
-                }
-            );
-
-
-            /* =====================================================
-               SUBIR TAREA
-            ====================================================== */
-
-            $('formSubirTarea').addEventListener(
-                'submit',
-                async function (e) {
-
-                    e.preventDefault();
-
-
-                    const archivo =
-                        $('fileInput')
-                            .files[0];
-
-
-                    if (!archivo)
-                        return;
-
-
-                    const {
-                        params
-                    } = leerHash();
-
-
-                    const curso =
-                        params.get('nombre') ||
-                        CURSO_POR_DEFECTO;
-
-
-                    const semana =
-                        Math.min(
-                            16,
-                            Math.max(
-                                1,
-                                parseInt(
-                                    params.get('semana'),
-                                    10
-                                ) || 1
-                            )
-                        );
-
-
-                    const formData =
-                        new FormData();
-
-
-                    formData.append(
-                        'archivo',
-                        archivo
-                    );
-
-
-                    formData.append(
-                        'comentario',
-                        $('comentarioInput').value
-                    );
-
-
-                    formData.append(
-                        'estudiante',
-                        'Gonzales Soto Jhoel'
-                    );
-
-
-                    formData.append(
-                        'curso',
-                        curso
-                    );
-
-
-                    formData.append(
-                        'semana',
-                        semana
-                    );
-
-
-                    try {
-
-                        const res =
-                            await fetch(
-                                API_URL +
-                                '/subir-tarea',
-                                {
-                                    method: 'POST',
-                                    body: formData
-                                }
-                            );
-
-
-                        if (res.ok) {
-
-                            alert(
-                                '¡Tarea y comentario subidos exitosamente!'
-                            );
-
-
-                            location.hash =
-                                enlace(
-                                    'curso',
-                                    {
-                                        nombre: curso
-                                    }
-                                );
-
-                        } else {
-
-                            alert(
-                                'Ocurrió un error al intentar subir la tarea.'
-                            );
-
-                        }
-
-                    } catch (err) {
-
-                        alert(
-                            'No se pudo conectar con el servidor backend.'
-                        );
-
-                    }
-
-                }
-            );
-
-
-            /* =====================================================
-               MODAL INFORMACIÓN
-            ====================================================== */
-
-            const modal =
-                $('modal-info');
-
-
-            $('btn-info').addEventListener(
-                'click',
-                function () {
-
-                    modal.classList.add(
-                        'open'
-                    );
-
-                }
-            );
-
-
-            $('btn-cerrar-info').addEventListener(
-                'click',
-                function () {
-
-                    modal.classList.remove(
-                        'open'
-                    );
-
-                }
-            );
-
-
-            modal.addEventListener(
-                'click',
-                function (e) {
-
-                    if (
-                        e.target === modal
-                    ) {
-
-                        modal.classList.remove(
-                            'open'
-                        );
-
-                    }
-
-                }
-            );
-
-
-            document.addEventListener(
-                'keydown',
-                function (e) {
-
-                    if (
-                        e.key === 'Escape'
-                    ) {
-
-                        modal.classList.remove(
-                            'open'
-                        );
-
-                    }
-
-                }
-            );
-
-
-            /* =====================================================
-               NAVEGACIÓN
-            ====================================================== */
-
-            window.addEventListener(
-                'hashchange',
-                render
-            );
-
-
-            render();
-
-        })();
-
-    </script>
-
+<div class="card" id="view-login">
+<h2>🎤 Entra al Estudio</h2>
+<p class="login-sub">Plataforma Académica · Hip Hop Edition</p>
+<form id="loginForm">
+<div class="input-group"><input type="text" id="username" placeholder="Usuario o Correo" required></div>
+<div class="input-group"><input type="password" id="password" placeholder="Contraseña" required></div>
+<button type="submit">Ingresar</button>
+<p id="error-message" class="error-text" hidden></p>
+</form>
+<a href="#curso?nombre=Desarrollo%20de%20Aplicaciones&modo=tarea" class="btn-ver-tarea">🎧 Ver Tarea</a>
+</div>
+<div id="view-app" hidden>
+<aside class="sidebar">
+<div class="brand"><div class="brand-logo-container"><div class="upla-logo">UPLA</div></div>
+<div class="brand-text"><p>Universidad</p><p>Peruana</p><p>Los Andes</p></div></div>
+<nav class="sidebar-nav" id="sidebar-nav"></nav>
+</aside>
+<main class="main-dashboard" id="main-dashboard">
+<header class="user-header">
+<div class="user-info"><h1>🎤 Gonzales Soto Jhoel <span class="user-subtitle">· Ingeniería de sistemas y computación · Ciclo IV</span></h1></div>
+<div class="header-actions">
+<button class="btn-secondary btn-gh" id="btn-gh" type="button">🔑 GitHub</button>
+<button class="btn-secondary" id="btn-info" type="button">Información</button>
+<button class="btn-secondary" type="button">Editar perfil</button>
+<a href="#login" class="btn-secondary btn-logout-header" id="btn-logout-header">Cerrar sesión</a>
+</div>
+</header>
+<div class="tabs-container" id="tabs-container"></div>
+<section id="page-inicio" hidden><div class="welcome-banner"><h2>Yo, Jhoel 🔥</h2><p>Aquí reúnes las actividades de tus dos cursos, organizadas por unidad. ¡Que no pare el beat!</p></div></section>
+<section id="page-curso" hidden>
+<div class="welcome-banner"><h2 id="course-title"></h2><p>Estructura de contenidos organizada en 4 unidades (álbumes) y 16 semanas lectivas (tracks).</p></div>
+<div class="units-container" id="units-container"></div>
+</section>
+<section id="page-actividad" hidden>
+<a href="#" class="btn-back" id="btn-volver-curso">← Volver al curso</a>
+<div class="container-actividad">
+<h2 id="titulo-pagina" style="font-family:'Permanent Marker',cursive;font-weight:400;color:#facc15;text-shadow:2px 2px 0 #ff2d95;margin-top:0;border-bottom:2px dashed #2e2e2e;padding-bottom:15px;margin-bottom:20px">Entrega de Actividad</h2>
+<section id="seccion-subida">
+<form id="formSubirTarea">
+<div class="form-group"><label for="comentarioInput">Comentario / Mensaje:</label><textarea id="comentarioInput" class="form-control" placeholder="Escribe un mensaje o descripción para el profesor sobre tu trabajo..."></textarea></div>
+<div class="form-group"><label for="fileInput">Adjuntar Archivo:</label><input type="file" id="fileInput" class="form-control" required></div>
+<button type="submit" class="btn-subir" id="btnSubirTarea">🎤 Subir Tarea</button>
+<p class="subida-estado" id="subidaEstado"></p>
+</form>
+</section>
+<section id="seccion-vista-tarea" hidden>
+<h3 style="font-family:'Permanent Marker',cursive;font-weight:400;color:#22d3ee;margin-top:0">Detalles de la Tarea Entregada</h3>
+<div class="tarea-vista"><p><strong>Comentario del Estudiante:</strong></p>
+<p id="comentarioMostrar" style="color:#a1a1aa;font-style:italic;background:#000;padding:12px;border-radius:6px;margin-top:8px">Cargando comentario...</p>
+<div style="margin-top:20px"><p><strong>Archivo adjunto:</strong></p>
+<div class="tarea-botones">
+<a id="btnVerArchivo" href="#" class="btn-descargar btn-ver">👁 Visualizar</a>
+<a id="btnDescargarArchivo" href="#" class="btn-descargar">⬇ Descargar Archivo</a>
+</div>
+</div></div>
+</section>
+</div>
+</section>
+</main>
+
+<!-- MODAL: INFORMACIÓN -->
+<div id="modal-info" class="modal-overlay">
+<div class="modal-box">
+<h3>🎧 Información del Estudiante</h3>
+<!-- Reemplaza PEGA_AQUI_TU_BASE64 por el base64 original de tu foto -->
+<img src="data:image/jpeg;base64,PEGA_AQUI_TU_BASE64" alt="Foto de Gonzales Soto Jhoel" class="foto-estudiante">
+<div class="modal-body">
+<p><strong>Estudiante:</strong> Gonzales Soto Jhoel</p>
+<p><strong>Carrera:</strong> Ingeniería de Sistemas y Computación</p>
+<p><strong>Ciclo:</strong> IV</p>
+<p><strong>Universidad:</strong> Universidad Peruana Los Andes</p>
+<p><strong>Estado:</strong> Matriculado / Activo</p>
+</div>
+<button id="btn-cerrar-info" class="btn-secondary" type="button">Cerrar</button>
+</div>
+</div>
+
+<!-- MODAL: CONECTAR GITHUB -->
+<div id="modal-gh" class="modal-overlay">
+<div class="modal-box gh-modal">
+<h3>🔑 Conectar con GitHub</h3>
+<p class="gh-hint" id="gh-aviso">Tus tareas se guardan en tu repositorio de GitHub (carpeta <b>entregas</b>). Estos datos se guardan solo en este navegador.</p>
+<label for="gh-owner">Usuario de GitHub</label>
+<input type="text" id="gh-owner" class="form-control" placeholder="ej. jhoel-gonzales" autocomplete="off">
+<label for="gh-repo">Repositorio</label>
+<input type="text" id="gh-repo" class="form-control" placeholder="ej. mis-tareas" autocomplete="off">
+<label for="gh-branch">Rama</label>
+<input type="text" id="gh-branch" class="form-control" value="main" autocomplete="off">
+<label for="gh-token">Token de acceso (fine-grained)</label>
+<input type="password" id="gh-token" class="form-control" placeholder="github_pat_..." autocomplete="off">
+<p class="gh-hint">Créalo en GitHub → Settings → Developer settings → Personal access tokens → <b>Fine-grained tokens</b>. Elige solo tu repositorio y el permiso <b>Contents: Read and write</b>.</p>
+<p class="gh-estado" id="gh-estado"></p>
+<button id="gh-guardar" class="btn-secondary" type="button">Guardar y probar conexión</button>
+<button id="gh-borrar" class="btn-secondary alt" type="button">Borrar datos guardados</button>
+<button id="gh-cerrar" class="btn-secondary alt" type="button">Cerrar</button>
+</div>
+</div>
+</div>
+<script>
+(function(){
+'use strict';
+const USUARIO_VALIDO='u00054e';
+const CLAVE_VALIDA='combate159';
+const CURSOS=['Desarrollo de Aplicaciones','Algoritmos y Estructuras de Datos'];
+const CURSO_POR_DEFECTO=CURSOS[0],UNIDADES=['I','II','III','IV'],SEMANAS_POR_UNIDAD=4;
+const FIGMA_SEMANA_01='https://www.figma.com/design/Mz7Vu87mZjwNbmtDRg3ZTX/Sin-t%C3%ADtulo?node-id=0-1&t=gpqgJMux6lx2Ncbg-1';
+const DRIVE_ALGORITMOS_SEMANA_01='https://drive.google.com/file/d/1tHTzYyLLIFBchCBgsPgKF8pIqpzibchh/view?usp=sharing';
+const DRIVE_ALGORITMOS_SEMANA_02='https://drive.google.com/file/d/1KHlPSEXUMpxKJ3T0kuRmb5hGUzOAfymt/view?usp=sharing';
+const DRIVE_SEMANA_03='https://drive.google.com/file/d/1Cz0bvVIMg5FnR993Dn4Xn3Sv_1tTy0Wg/view?usp=sharing';
+const DRIVE_ALGORITMOS_SEMANA_04='https://drive.google.com/file/d/1xKautVD7gC_7PI8bl-hX1fU9TuK8r3ys/view?usp=sharing';
+const DRIVE_SEMANA_02='https://drive.google.com/file/d/1GqAgYrmgtuu1FwCj1aTRRYORo2rcMRCW/view?usp=sharing';
+
+/* Enlaces externos por curso y semana */
+const ENLACES={
+ 'Desarrollo de Aplicaciones':{1:{url:FIGMA_SEMANA_01,tipo:'figma',etiqueta:'Ver diseño en Figma'},2:{url:DRIVE_SEMANA_02,tipo:'drive',etiqueta:'Ver tarea en Google Drive'}},
+ 'Algoritmos y Estructuras de Datos':{1:{url:DRIVE_ALGORITMOS_SEMANA_01,tipo:'drive',etiqueta:'Ver tarea en Google Drive'},2:{url:DRIVE_ALGORITMOS_SEMANA_02,tipo:'drive',etiqueta:'Ver tarea en Google Drive'},3:{url:DRIVE_SEMANA_03,tipo:'drive',etiqueta:'Ver tarea en Google Drive'},4:{url:DRIVE_ALGORITMOS_SEMANA_04,tipo:'drive',etiqueta:'Ver tarea en Google Drive'}}
+};
+const EXT=' target="_blank" rel="noopener noreferrer"';
+const MAX_MB=50;
+
+const $=id=>document.getElementById(id);
+function esc(texto){const div=document.createElement('div');div.textContent=texto;return div.innerHTML}
+function enlace(vista,params){const query=Object.entries(params||{}).filter(([,v])=>v!==null&&v!==undefined).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');return '#'+vista+(query?'?'+query:'')}
+function leerHash(){const raw=location.hash.replace(/^#/,'')||'login',partes=raw.split('?');return{vista:partes[0],params:new URLSearchParams(partes[1]||'')}}
+function urlDescargaDrive(url){const m=url.match(/\/d\/([^/?]+)/);return m?'https://drive.google.com/uc?export=download&id='+m[1]:url}
+let sesionEnMemoria=false;
+function estaLogueado(){if(sesionEnMemoria)return true;try{return sessionStorage.getItem('sesion')==='1'}catch(e){return false}}
+function guardarSesion(activa){sesionEnMemoria=activa;try{if(activa)sessionStorage.setItem('sesion','1');else sessionStorage.removeItem('sesion')}catch(e){}}
+
+/* =====================================================
+   GITHUB: guarda y lee las entregas en tu repositorio
+   ===================================================== */
+const LS_GH='gh_config_hiphop';
+let cfgMem={owner:'',repo:'',branch:'main',token:''};
+function getCfg(){try{const c=JSON.parse(localStorage.getItem(LS_GH)||'null');if(c)return c}catch(e){}return cfgMem}
+function setCfg(c){cfgMem=c;try{localStorage.setItem(LS_GH,JSON.stringify(c))}catch(e){}}
+function borrarCfg(){cfgMem={owner:'',repo:'',branch:'main',token:''};try{localStorage.removeItem(LS_GH)}catch(e){}}
+function cfgOK(){const c=getCfg();return !!(c.owner&&c.repo&&c.token)}
+
+function b64ToUtf8(b64){const bin=atob(b64.replace(/\s/g,''));const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));return new TextDecoder().decode(bytes)}
+function utf8ToB64(str){const bytes=new TextEncoder().encode(str);let bin='';for(let i=0;i<bytes.length;i+=8192)bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+8192));return btoa(bin)}
+function fileToB64(file){return new Promise((ok,fail)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=()=>fail(new Error('No se pudo leer el archivo.'));r.readAsDataURL(file)})}
+function safeName(n){return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]+/g,'_')}
+function slug(t){return t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+function fmtSize(b){return b>=1048576?(Math.round(b/1048576*10)/10)+' MB':Math.max(1,Math.round(b/1024))+' KB'}
+function rutaBase(curso,semana){return 'entregas/'+slug(curso)+'/semana-'+semana+'/'}
+function contentsPath(ruta){const c=getCfg();return '/repos/'+encodeURIComponent(c.owner)+'/'+encodeURIComponent(c.repo)+'/contents/'+ruta.split('/').map(encodeURIComponent).join('/')}
+
+async function gh(method,path,body,accept){
+  const c=getCfg();
+  const res=await fetch('https://api.github.com'+path,{method,headers:Object.assign({'Accept':accept||'application/vnd.github+json','Authorization':'Bearer '+c.token},body?{'Content-Type':'application/json'}:{}),body:body?JSON.stringify(body):undefined});
+  if(!res.ok){let m='';try{m=(await res.json()).message}catch(e){}const err=new Error(m||res.statusText);err.status=res.status;throw err}
+  return accept?res:res.json();
+}
+function msgGH(err){
+  if(err.status===401)return 'El token no es válido o venció. Crea uno nuevo en GitHub.';
+  if(err.status===403)return 'Sin permiso. Revisa que el token tenga "Contents: Read and write" sobre tu repositorio.';
+  if(err.status===404)return 'No se encontró el repositorio. Revisa usuario, repositorio, rama y que el token tenga acceso a él.';
+  if(err.status===413)return 'El archivo es demasiado grande para GitHub.';
+  if(err.status===422)return 'GitHub rechazó la operación: '+err.message;
+  if(err instanceof TypeError)return 'No hay conexión a internet o GitHub no responde.';
+  return err.message||'Error desconocido.';
+}
+async function ultimaEntrega(curso,semana){
+  const c=getCfg(),base=rutaBase(curso,semana);
+  let lista;
+  try{lista=await gh('GET',contentsPath(base)+'?ref='+encodeURIComponent(c.branch||'main'))}
+  catch(e){if(e.status===404)return null;throw e}
+  const metas=lista.filter(f=>f.type==='file'&&f.name.endsWith('.json')).sort((a,b)=>b.name.localeCompare(a.name));
+  if(!metas.length)return null;
+  const r=await gh('GET',contentsPath(metas[0].path)+'?ref='+encodeURIComponent(c.branch||'main'));
+  return JSON.parse(b64ToUtf8(r.content));
+}
+const MIMES={pdf:'application/pdf',png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',gif:'image/gif',webp:'image/webp',svg:'image/svg+xml',txt:'text/plain;charset=utf-8',csv:'text/plain;charset=utf-8',java:'text/plain;charset=utf-8',py:'text/plain;charset=utf-8',js:'text/plain;charset=utf-8',json:'text/plain;charset=utf-8',md:'text/plain;charset=utf-8',mp4:'video/mp4',mp3:'audio/mpeg'};
+const extDe=n=>((n||'').split('.').pop()||'').toLowerCase();
+async function obtenerBlob(entrega){
+  const c=getCfg();
+  const res=await gh('GET',contentsPath(entrega.ruta)+'?ref='+encodeURIComponent(c.branch||'main'),null,'application/vnd.github.raw+json');
+  const buf=await res.blob();
+  return new Blob([buf],{type:MIMES[extDe(entrega.nombre_archivo)]||'application/octet-stream'});
+}
+function guardarBlob(blob,nombre){
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=nombre;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+async function descargarEntrega(entrega){guardarBlob(await obtenerBlob(entrega),entrega.nombre_archivo)}
+async function verEntrega(entrega){
+  const ventana=window.open('about:blank','_blank');
+  try{
+    const blob=await obtenerBlob(entrega);
+    if(MIMES[extDe(entrega.nombre_archivo)]&&ventana){ventana.location.href=URL.createObjectURL(blob)}
+    else{if(ventana)ventana.close();guardarBlob(blob,entrega.nombre_archivo)}
+  }catch(err){if(ventana)ventana.close();throw err}
+}
+function pedirConexion(msg){
+  const c=getCfg();
+  $('gh-owner').value=c.owner||'';$('gh-repo').value=c.repo||'';$('gh-branch').value=c.branch||'main';$('gh-token').value='';
+  const e=$('gh-estado');e.className='gh-estado';e.textContent=msg||(c.token?'✔ Ya hay una conexión guardada en este navegador.':'');
+  $('modal-gh').classList.add('open');
+}
+
+/* =====================================================
+   VISTAS
+   ===================================================== */
+function renderSidebar(vista,curso,modoTarea){
+let html='';
+if(!modoTarea)html+='<a href="#inicio" class="nav-item'+(vista==='inicio'?' active':'')+'">Inicio</a>';
+html+='<a href="'+enlace('curso',{nombre:curso,modo:modoTarea?'tarea':null})+'" class="nav-item'+(vista!=='inicio'?' active':'')+'">'+esc(curso)+'</a>';
+html+='<a href="#login" class="nav-item logout" id="btn-logout">Cerrar Sesión</a>';
+$('sidebar-nav').innerHTML=html;
+}
+function renderTabs(vista,curso,modoTarea){
+let html='';
+if(!modoTarea)html+='<a href="#inicio" class="tab-btn'+(vista==='inicio'?' active':'')+'">Inicio</a>';
+CURSOS.forEach(nombre=>{const activo=vista==='curso'&&nombre===curso;html+='<a href="'+enlace('curso',{nombre,modo:modoTarea?'tarea':null})+'" class="tab-btn'+(activo?' active':'')+'">'+esc(nombre)+'</a>'});
+$('tabs-container').innerHTML=html;
+}
+function renderUnidades(curso,modoTarea){
+let html='';
+for(let u=0;u<UNIDADES.length;u++){
+html+='<div class="unit-card"><div class="unit-header">🎵 Unidad '+UNIDADES[u]+' · Álbum '+(u+1)+'</div><div class="weeks-grid">';
+for(let i=1;i<=SEMANAS_POR_UNIDAD;i++){
+const semana=u*SEMANAS_POR_UNIDAD+i;
+const ext=(ENLACES[curso]||{})[semana];
+const hrefTarea=enlace('actividad',{nombre:curso,semana,modo:modoTarea?'tarea':null});
+const hrefVer=enlace('actividad',{nombre:curso,semana,modo:'tarea'});
+let principal,ver,descargar;
+if(ext){
+ principal='<a href="'+ext.url+'"'+EXT+' class="week-main">';
+ ver='<a href="'+ext.url+'"'+EXT+' class="btn-week btn-view">👁 Visualizar</a>';
+ if(ext.tipo==='drive')descargar='<a href="'+urlDescargaDrive(ext.url)+'"'+EXT+' class="btn-week btn-dl">⬇ Descargar</a>';
+ else descargar='<a href="'+ext.url+'"'+EXT+' class="btn-week btn-dl" title="Abre el archivo en Figma para exportarlo">⬇ Descargar</a>';
+}else{
+ principal='<a href="'+hrefTarea+'" class="week-main">';
+ ver='<a href="'+hrefVer+'" class="btn-week btn-view">👁 Visualizar</a>';
+ descargar='<button type="button" class="btn-week btn-dl" data-descargar data-curso="'+esc(curso)+'" data-semana="'+semana+'">⬇ Descargar</button>';
+}
+const etiqueta=ext?ext.etiqueta:'Entrega de Actividad';
+html+='<div class="week-card">'+principal+'<div class="week-number">Semana '+semana+'</div><div class="week-label">Track '+semana+' · '+etiqueta+'</div></a>'
+ +'<div class="week-actions">'+ver+descargar+'</div></div>';
+}
+html+='</div></div>';
+}
+$('units-container').innerHTML=html;
+}
+
+let entregaActual=null;
+async function cargarTareaGuardada(curso,semana){
+const comentario=$('comentarioMostrar'),btnDescargar=$('btnDescargarArchivo'),btnVer=$('btnVerArchivo');
+entregaActual=null;
+comentario.textContent='Cargando comentario...';btnDescargar.style.display='';btnVer.style.display='';
+if(!cfgOK()){
+ comentario.textContent='Conecta tu GitHub (botón 🔑 GitHub de arriba) para ver las entregas.';
+ btnDescargar.style.display='none';btnVer.style.display='none';return;
+}
+try{
+ const e=await ultimaEntrega(curso,semana);
+ if(e){entregaActual=e;comentario.textContent=e.comentario||'Sin comentarios registrados.';btnDescargar.textContent='⬇ Descargar Archivo ('+e.nombre_archivo+')'}
+ else{comentario.textContent='No hay entregas disponibles para esta semana.';btnDescargar.style.display='none';btnVer.style.display='none'}
+}catch(err){
+ console.error('Error al cargar la tarea:',err);
+ comentario.textContent='No se pudo leer la entrega: '+msgGH(err);
+ btnDescargar.style.display='none';btnVer.style.display='none';
+}
+}
+function render(){
+const{vista,params}=leerHash(),modoTarea=params.get('modo')==='tarea',curso=params.get('nombre')||CURSO_POR_DEFECTO;
+const vistasValidas=['login','inicio','curso','actividad'];
+if(!vistasValidas.includes(vista)){location.hash='#login';return}
+const requiereSesion=vista==='inicio'||(vista!=='login'&&!modoTarea);
+if(requiereSesion&&!estaLogueado()){location.hash='#login';return}
+if(vista==='login'){document.body.className='login-body';$('view-login').hidden=false;$('view-app').hidden=true;return}
+document.body.className='dashboard-body';$('view-login').hidden=true;$('view-app').hidden=false;$('main-dashboard').scrollTop=0;
+renderSidebar(vista,curso,modoTarea);
+$('page-inicio').hidden=vista!=='inicio';$('page-curso').hidden=vista!=='curso';$('page-actividad').hidden=vista!=='actividad';$('tabs-container').hidden=vista==='actividad';
+if(vista!=='actividad')renderTabs(vista,curso,modoTarea);
+if(vista==='curso'){$('course-title').textContent=curso;renderUnidades(curso,modoTarea)}
+if(vista==='actividad'){
+const semana=Math.min(16,Math.max(1,parseInt(params.get('semana'),10)||1));
+$('titulo-pagina').textContent='Entrega de Actividad - Semana '+semana;
+$('btn-volver-curso').href=enlace('curso',{nombre:curso,modo:modoTarea?'tarea':null});
+if(modoTarea){$('seccion-subida').hidden=true;$('seccion-vista-tarea').hidden=false;cargarTareaGuardada(curso,semana)}
+else{$('seccion-vista-tarea').hidden=true;$('seccion-subida').hidden=false;$('formSubirTarea').reset();$('subidaEstado').textContent='';$('subidaEstado').className='subida-estado'}
+}
+}
+
+/* ---------- login ---------- */
+$('loginForm').addEventListener('submit',function(e){
+e.preventDefault();
+const usuario=$('username').value.trim(),clave=$('password').value,error=$('error-message');
+if(usuario===USUARIO_VALIDO&&clave===CLAVE_VALIDA){error.hidden=true;$('password').value='';guardarSesion(true);location.hash='#inicio'}
+else{error.textContent='Código o contraseña incorrectos.';error.hidden=false}
+});
+document.addEventListener('click',function(e){if(e.target.closest('#btn-logout, #btn-logout-header'))guardarSesion(false)});
+
+/* ---------- botón "Descargar" de la tarjeta de semana ---------- */
+document.addEventListener('click',async function(e){
+const btn=e.target.closest('[data-descargar]');
+if(!btn)return;
+if(!cfgOK()){pedirConexion('Conecta tu GitHub para descargar las entregas.');return}
+const curso=btn.dataset.curso,semana=btn.dataset.semana,textoOriginal=btn.textContent;
+btn.textContent='⏳ Buscando...';btn.disabled=true;
+try{
+ const entrega=await ultimaEntrega(curso,semana);
+ if(entrega)await descargarEntrega(entrega);
+ else alert('Todavía no hay tarea entregada para la semana '+semana+'.');
+}catch(err){alert('No se pudo descargar: '+msgGH(err))}
+finally{btn.textContent=textoOriginal;btn.disabled=false}
+});
+
+/* ---------- detalle de la tarea: Visualizar / Descargar ---------- */
+$('btnVerArchivo').addEventListener('click',async function(e){
+e.preventDefault();if(!entregaActual)return;
+try{await verEntrega(entregaActual)}catch(err){alert('No se pudo abrir el archivo: '+msgGH(err))}
+});
+$('btnDescargarArchivo').addEventListener('click',async function(e){
+e.preventDefault();if(!entregaActual)return;
+try{await descargarEntrega(entregaActual)}catch(err){alert('No se pudo descargar el archivo: '+msgGH(err))}
+});
+
+/* ---------- SUBIR TAREA (ahora a GitHub) ---------- */
+$('formSubirTarea').addEventListener('submit',async function(e){
+e.preventDefault();
+const estado=$('subidaEstado'),btn=$('btnSubirTarea');
+const setEstado=(t,err)=>{estado.textContent=t;estado.className='subida-estado'+(err?' err':'')};
+const archivo=$('fileInput').files[0];if(!archivo)return;
+if(!cfgOK()){pedirConexion('Primero conecta tu GitHub para poder subir tareas.');return}
+if(archivo.size>MAX_MB*1024*1024){setEstado('El archivo pesa más de '+MAX_MB+' MB. Comprímelo o súbelo a Drive.',true);return}
+const{params}=leerHash(),curso=params.get('nombre')||CURSO_POR_DEFECTO,semana=Math.min(16,Math.max(1,parseInt(params.get('semana'),10)||1));
+const c=getCfg(),branch=c.branch||'main',ts=Date.now(),base=rutaBase(curso,semana);
+const ruta=base+ts+'__'+safeName(archivo.name);
+btn.disabled=true;btn.textContent='⏳ Subiendo...';
+try{
+ setEstado('Leyendo el archivo...');
+ const contenido=await fileToB64(archivo);
+ setEstado('Subiendo archivo a GitHub... (puede tardar según el tamaño)');
+ await gh('PUT',contentsPath(ruta),{message:'Entrega: '+curso+' - Semana '+semana+' - '+archivo.name,content:contenido,branch});
+ setEstado('Guardando comentario...');
+ const meta={estudiante:'Gonzales Soto Jhoel',curso,semana,comentario:$('comentarioInput').value,nombre_archivo:archivo.name,ruta,tamano:fmtSize(archivo.size),fecha:new Date(ts).toISOString()};
+ await gh('PUT',contentsPath(base+ts+'.json'),{message:'Datos de entrega: '+curso+' - Semana '+semana,content:utf8ToB64(JSON.stringify(meta,null,2)),branch});
+ alert('¡Tarea y comentario subidos exitosamente a GitHub!');
+ location.hash=enlace('curso',{nombre:curso});
+}catch(err){
+ console.error(err);
+ setEstado('No se pudo subir: '+msgGH(err),true);
+}finally{btn.disabled=false;btn.textContent='🎤 Subir Tarea'}
+});
+
+/* ---------- modal GitHub ---------- */
+const modalGH=$('modal-gh');
+$('btn-gh').addEventListener('click',()=>pedirConexion());
+$('gh-cerrar').addEventListener('click',()=>modalGH.classList.remove('open'));
+modalGH.addEventListener('click',e=>{if(e.target===modalGH)modalGH.classList.remove('open')});
+$('gh-borrar').addEventListener('click',()=>{borrarCfg();pedirConexion('Datos de conexión borrados de este navegador.')});
+$('gh-guardar').addEventListener('click',async function(){
+const est=$('gh-estado'),anterior=getCfg();
+const nuevo={owner:$('gh-owner').value.trim(),repo:$('gh-repo').value.trim().replace(/\.git$/,''),branch:$('gh-branch').value.trim()||'main',token:$('gh-token').value.trim()||anterior.token||''};
+if(!nuevo.owner||!nuevo.repo||!nuevo.token){est.className='gh-estado err';est.textContent='Completa usuario, repositorio y token.';return}
+setCfg(nuevo);est.className='gh-estado';est.textContent='Probando conexión...';
+try{
+ const r=await gh('GET','/repos/'+encodeURIComponent(nuevo.owner)+'/'+encodeURIComponent(nuevo.repo));
+ if(r.permissions&&!r.permissions.push)throw Object.assign(new Error('El token no tiene permiso de escritura'),{status:403});
+ est.textContent='✔ Conectado a '+r.full_name+'. Ya puedes subir tareas.';
+ const{vista}=leerHash();if(vista==='actividad')render();
+}catch(err){setCfg(anterior);est.className='gh-estado err';est.textContent=msgGH(err)}
+});
+
+/* ---------- modal información ---------- */
+const modal=$('modal-info');
+$('btn-info').addEventListener('click',()=>modal.classList.add('open'));
+$('btn-cerrar-info').addEventListener('click',()=>modal.classList.remove('open'));
+modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){modal.classList.remove('open');modalGH.classList.remove('open')}});
+window.addEventListener('hashchange',render);
+render();
+})();
+</script>
 </body>
-
 </html>
